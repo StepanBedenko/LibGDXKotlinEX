@@ -1,17 +1,11 @@
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.scenes.scene2d.Stage
 
-class Turtle: ActorBeta() {
-    override fun act(dt: Float) {
-        super.act(dt)
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-            this.moveBy(-1f,0f)
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-            this.moveBy(1f,0f)
-        if(Gdx.input.isKeyPressed(Input.Keys.UP))
-            this.moveBy(0f,1f)
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
-            this.moveBy(0f,-1f)
+class Turtle(x: Float, y: Float, s: Stage): BaseActor(x, y, s) {
+    init{
+        var fileNames = arrayOf("turtle-1.png","turtle-2.png", "turtle-3.png",
+        "turtle-4.png", "turtle-5.png", "turtle-6.png")
+        loadAnimationFromFiles(fileNames, 0.1f, true)
     }
 }
