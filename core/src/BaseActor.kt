@@ -7,18 +7,29 @@ import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.Stage
 
 open class BaseActor(x: Float, y: Float, s: Stage):Actor() {
+    var animation: Animation<TextureRegion>? = null
+        set(value) {
+            field = value
+            field?.let {
+                val textureRegion = it.getKeyFrame(0f)
+                val width = textureRegion.regionWidth.toFloat()
+                val height = textureRegion.regionHeight.toFloat()
+                setSize(width, height)
+                setOrigin(width / 2, height / 2)
+            }
+        }
+
+    private var elapsedTime = 0f
+
+    private var animationPaused = false
+
     init {
         setPosition(x,y)
         s.addActor(this)
     }
 
-    private var animation: Animation<TextureRegion> = Animation(0f,TextureRegion())
-
-    private var elapsedTime = 0f
-    private var animationPaused = false
-
     fun isAnimationFinished(): Boolean{
-        return animation.isAnimationFinished(elapsedTime)
+        return animation?.isAnimationFinished(elapsedTime) ?: false
     }
 
     fun loadTexture(fileName: String): Animation<TextureRegion>{
@@ -79,14 +90,6 @@ open class BaseActor(x: Float, y: Float, s: Stage):Actor() {
             return anim
     }
 
-    fun setAnimation(anim: Animation<TextureRegion>){
-        animation = anim
-        var tr = animation.getKeyFrame(0f)
-        var w = tr.regionWidth.toFloat()
-        var h = tr.regionHeight.toFloat()
-        setSize(w,h)
-        setOrigin(w/2,h/2)
-    }
 
     fun setAnimationPaused(pause: Boolean){
         animationPaused = pause
@@ -105,7 +108,8 @@ open class BaseActor(x: Float, y: Float, s: Stage):Actor() {
         batch.setColor(c.r, c.g, c.b, c.a)
 
         if(isVisible)
-            batch.draw(animation.getKeyFrame(elapsedTime),
+            batch.draw(
+                animation?.getKeyFrame(elapsedTime),
             x,y,originX,originY,width,height, scaleX, scaleY, rotation)
     }
 }
